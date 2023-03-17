@@ -2,7 +2,7 @@
  * @Author: 尹成诺
  * @Date: 2023-02-15 16:41:32
  * @LastEditors: 尹成诺
- * @LastEditTime: 2023-02-16 11:34:05
+ * @LastEditTime: 2023-03-17 09:36:56
  * @Description: file content
 -->
 <script setup lang="ts">
@@ -11,7 +11,7 @@ import * as tf from "@tensorflow/tfjs";
 import * as tfvis from "@tensorflow/tfjs-vis";
 import prettierTFVIS from "@/api/prettierTFVIS";
 
-prettierTFVIS('线性回归');
+prettierTFVIS("线性回归");
 
 const form = reactive({ x: 5, y: "?", loading: true });
 
@@ -37,14 +37,18 @@ const ai = () => {
 </script>
 
 <template>
-  <el-form v-loading="form.loading" :model="form" style="width: 200px">
+  <el-form v-loading="form.loading" element-loading-text="模型训练中" :model="form" style="width: 200px">
     <el-form-item label="X">
       <el-input-number v-model="form.x" placeholder="X" @change="ai" />
     </el-form-item>
   </el-form>
-  <el-alert v-loading="form.loading" type="success" effect="dark">
+  <el-alert v-loading="form.loading" element-loading-text="模型训练中" type="success" effect="dark">
     <template #title>
       <span class="result">{{ `如果 x 为 ${form.x}，那么预测 y 为 ${form.y}` }}</span>
     </template>
   </el-alert>
+  <br />
+  <el-divider />
+  <br />
+  <el-button type="primary" @click="model.save('downloads://my-model')">导出模型</el-button>
 </template>

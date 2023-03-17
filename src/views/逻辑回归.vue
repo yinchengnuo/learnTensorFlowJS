@@ -2,15 +2,15 @@
  * @Author: 尹成诺
  * @Date: 2023-02-15 16:37:30
  * @LastEditors: 尹成诺
- * @LastEditTime: 2023-02-16 11:34:12
+ * @LastEditTime: 2023-03-17 09:37:13
  * @Description: file conten
 -->
 <script setup lang="ts">
+import { reactive } from "vue";
 import getData from "@/api/逻辑回归数据";
 import * as tf from "@tensorflow/tfjs";
 import * as tfvis from "@tensorflow/tfjs-vis";
 import prettierTFVIS from "@/api/prettierTFVIS";
-import { reactive } from "vue";
 
 prettierTFVIS("逻辑回归");
 
@@ -38,7 +38,7 @@ const ai = () => {
 </script>
 
 <template>
-  <el-form v-loading="form.loading" :model="form" style="width: 200px">
+  <el-form v-loading="form.loading" element-loading-text="模型训练中" :model="form" style="width: 200px">
     <el-form-item label="X">
       <el-input-number v-model="form.x" placeholder="X" @change="ai" />
     </el-form-item>
@@ -46,7 +46,7 @@ const ai = () => {
       <el-input-number v-model="form.y" placeholder="Y" @change="ai" />
     </el-form-item>
   </el-form>
-  <el-alert v-loading="form.loading" type="success" effect="dark">
+  <el-alert v-loading="form.loading" element-loading-text="模型训练中" type="success" effect="dark">
     <template #title>
       <span class="result">{{ `点 X = ${form.x} Y = ${form.y} 为蓝色的概率为 ${form.result * 100}%` }}</span>
     </template>
