@@ -2,7 +2,7 @@
  * @Author: 尹成诺
  * @Date: 2023-02-15 16:37:30
  * @LastEditors: 尹成诺
- * @LastEditTime: 2023-03-17 10:46:46
+ * @LastEditTime: 2023-03-23 10:55:52
  * @Description: file content
  */
 import { createRouter, createWebHashHistory } from "vue-router";
@@ -27,10 +27,12 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach(({ path }) => {
+router.beforeEach(({ path, query, params }) => {
   if (path !== decodeURIComponent(path)) {
     return {
+      query: query,
       replace: true,
+      params: params,
       path: decodeURIComponent(path),
     };
   }

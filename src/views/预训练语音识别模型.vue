@@ -2,18 +2,16 @@
  * @Author: 尹成诺
  * @Date: 2023-03-17 10:21:56
  * @LastEditors: 尹成诺
- * @LastEditTime: 2023-03-21 22:06:00
+ * @LastEditTime: 2023-04-03 17:05:50
  * @Description: file content
 -->
 <script setup lang="ts">
+import { ref } from "vue";
 import * as speechCommands from "@tensorflow-models/speech-commands";
 
-const recognizer = speechCommands.create(
-  "BROWSER_FFT",
-  undefined,
-  "https://static-mp-f3138cb7-2a3b-4344-8e79-a1f65871aab2.next.bspapp.com/AISpeech/model.json",
-  "https://static-mp-f3138cb7-2a3b-4344-8e79-a1f65871aab2.next.bspapp.com/AISpeech/metadata.json"
-);
+const result = ref("");
+
+const recognizer = speechCommands.create("BROWSER_FFT", undefined, location.href.split("#")[0] + "/model.json", location.href.split("#")[0] + "/metadata.json");
 recognizer.ensureModelLoaded().then(() => {
   const labels = recognizer.wordLabels();
   console.log("👀  file: 预训练语音识别模型.vue:20  recognizer.ensureModelLoaded  labels:", labels);
@@ -23,7 +21,8 @@ recognizer.ensureModelLoaded().then(() => {
       const { scores } = result;
       const maxValue = Math.max(...scores);
       const index = scores.indexOf(maxValue) - 2;
-      console.log(labels[index]);
+      result.value = labels[index];
+      return Promise.resolve();
     },
     { probabilityThreshold: 0.9 }
   );
@@ -31,5 +30,8 @@ recognizer.ensureModelLoaded().then(() => {
 </script>
 
 <template>
-  <div>预训练语音识别模型</div>
+  <div>
+    <h1>预训练语音识别模型</h1>
+    <div>识别结果：{{ result || "-" }}</div>
+  </div>
 </template>

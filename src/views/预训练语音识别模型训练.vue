@@ -2,7 +2,7 @@
  * @Author: 尹成诺
  * @Date: 2023-03-17 10:21:56
  * @LastEditors: 尹成诺
- * @LastEditTime: 2023-03-21 22:57:00
+ * @LastEditTime: 2023-04-03 17:05:26
  * @Description: file content
 -->
 <script setup lang="ts">
@@ -12,15 +12,11 @@ import * as speechCommands from "@tensorflow-models/speech-commands";
 
 const code = ref("");
 const input = ref("");
-const listenning = ref(false);
+const result = ref("");
 const disabled = ref(false);
+const listenning = ref(false);
 
-const recognizer = speechCommands.create(
-  "BROWSER_FFT",
-  undefined,
-  "https://static-mp-f3138cb7-2a3b-4344-8e79-a1f65871aab2.next.bspapp.com/AISpeech/model.json",
-  "https://static-mp-f3138cb7-2a3b-4344-8e79-a1f65871aab2.next.bspapp.com/AISpeech/metadata.json"
-);
+const recognizer = speechCommands.create("BROWSER_FFT", undefined, location.href.split('#')[0] + "/model.json", location.href.split('#')[0] + "/metadata.json");
 let transferRecognizer: any;
 recognizer.ensureModelLoaded().then(() => {
   transferRecognizer = recognizer.createTransfer("轮播图");
@@ -45,13 +41,11 @@ const toggle = async () => {
   if (listenning.value) {
     transferRecognizer.stopListening();
   } else {
-    await transferRecognizer.listen(
-      (result: any) => {
-        const { scores } = result;
-        transferRecognizer.wordLabels()[scores.indexOf(Math.max(...scores))]
-        // speechSynthesis.speak(new SpeechSynthesisUtterance("你说 " + transferRecognizer.wordLabels()[scores.indexOf(Math.max(...scores))]));
-      }
-    );
+    await transferRecognizer.listen((result: any) => {
+      const { scores } = result;
+      transferRecognizer.wordLabels()[scores.indexOf(Math.max(...scores))];
+      result.value = transferRecognizer.wordLabels()[scores.indexOf(Math.max(...scores))];
+    });
   }
 };
 
@@ -77,6 +71,10 @@ const save = () => {
     <el-button type="primary" :disabled="disabled" @click="save">导出模型</el-button>
     <br />
     <br />
+    <div v-if="code">训练次数：</div>
     <pre>{{ code }}</pre>
+    <br />
+    <br />
+    <div>识别结果：{{ result || '-' }}</div>
   </div>
 </template>

@@ -2,21 +2,27 @@
  * @Author: 尹成诺
  * @Date: 2023-02-15 16:37:30
  * @LastEditors: 尹成诺
- * @LastEditTime: 2023-03-17 10:44:36
+ * @LastEditTime: 2023-03-23 10:56:33
  * @Description: file content
 -->
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+import { computed } from "vue";
+import { RouterLink, RouterView, useRouter } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
+
+const Router = useRouter()
+
+const li = computed(() => {
+  return Router.currentRoute.value.query.li
+})
 </script>
 
 <template>
-  <header>
+  <header v-if="!li">
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
       <HelloWorld msg="TensorFlowJS 学习笔记" />
-
       <nav>
         <RouterLink replace to="/">概念</RouterLink>
         <RouterLink replace to="/线性回归">线性回归</RouterLink>
